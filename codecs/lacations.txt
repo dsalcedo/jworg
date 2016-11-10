@@ -1,0 +1,5 @@
+Windows: ffmpeg.dll
+Mac OS X: nwjs.app/Contents/Versions/<chromium-version>/nwjs Framework.framework/libffmpeg.dylib
+Linux lib/libffmpeg.so
+
+http://docs.nwjs.io/en/latest/For%20Developers/Enable%20Proprietary%20Codecs/
