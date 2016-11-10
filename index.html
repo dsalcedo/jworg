@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello World!</title>
+    <link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/main.css">
+    
+    <style type="text/css">
+    .btn-classic {
+    	display: block;
+    	margin-top: 10px;
+    	width: 100%;
+    }
+	.topBar{
+    	background: #373433;
+    	padding-top: 20px;
+    	padding-bottom: 20px;
+    	color: #ffffff;
+    }
+    .topBar span {
+    	display: block;
+    }
+    .topBar .btn {
+    	width: 100%;	
+    }
+    .btn-topBar{
+    	background: #4e4e4e;
+    	color: #bfbfbf;
+    	margin-top: 5px;
+    	width: 100%;
+    }
+    .btn-topBar:hover,
+    .btn-topBar:focus {
+    	color: #fff;
+    }
+    </style>
+  </head>
+  <body>
+
+  	<div class="container-fluid">
+      <div class="row">
+      	<div class="col-sm-3 col-md-2 sidebar">
+          <div class="row">
+            <div class="col-md-12 text-center" id='localip'>
+            	<button class="btn btn-topBar btn-primary btn-xs" onClick="openWindow()">
+            		Abrir ventana
+            	</button>
+            	<button class="btn btn-topBar btn-xs" id="controlVentana" data-accion="maximizar">
+            		Maximizar ventana
+            	</button>
+            </div>
+          </div>
+    
+      	</div>
+      	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      		<div class="row topBar">
+  	  			<div class="col-xs-4 col-md-4 text-center">
+  	  				<span>Transcurrido</span>
+  	  				<h3 id="transcurridoReu">00:00</h3>
+              		<button class="btn btn-topBar btn-xs" id="btnTiempoReunion" data-iniciada='no'>
+                		Comenzar reunion
+              		</button>
+  	  			</div>
+  	  			<div class="col-xs-4 col-md-4 text-center">
+  	  				<h3 id="hora" style="margin-top:40px;">00:00:00</h3>
+  	  				<button class="btn btn-primary btn-classic btn-xs" id="btnOcultarTodo" style="margin-top:15px;">
+                		Ocultar todo
+              		</button>
+  	  			</div>
+  	  			<div class="col-xs-4 col-md-4 text-center">
+  	  				<span>Asignación</span>
+  	  				<h3 id="transcurridoAsig">00:00</h3>
+              		<button class="btn btn-topBar btn-xs" id="btnTiempoAsignacion" data-iniciada='no'>
+                		Comenzar
+              		</button>
+              		<button class="btn btn-default btn-classic btn-xs" id="btnMostrarTiempoAsignacion" data-proyectado='no'>
+                		Proyectar
+              		</button>
+  	  			</div>
+  	  		</div>
+   
+      	</div>
+      </div>
+  	</div>
+        <!--<video id="localStream" width="640" height="480" autoplay style="display: inline;"></video>-->  
+
+	
+	<script src="./assets/js/jquery.min.js"></script>
+	<script src="./assets/js/bootstrap.min.js"></script>
+	<script src="./assets/js/crono.js"></script>
+	<script type="text/javascript">
+	var emitter = require('events');
+	var eventEmitter = new emitter.EventEmitter();
+
+	var ventana = {
+		maximizar : function() {
+			eventEmitter.emit('ventana', 'maximizar');
+		},
+		restaurar : function () {
+			eventEmitter.emit('ventana', 'restaurar');
+		}
+	};
+
+	var reunion = {
+			'asignacion':  {
+				tiempo : function(accion) {
+				// comenzar, pausar, reiniciar
+				eventEmitter.emit('asignacion:tiempo', accion);
+			},
+			tiempo: function (accion) {
+				// comenzar, pausar, reiniciar
+				eventEmitter.emit('reunion:tiempo', accion);
+			}
+		}
+	};
+
+	//eventEmitter.emit('ventana', 'maximizar');
+	$(document).on('click', '#btnOcultarTodo', function (e) {
+		eventEmitter.emit('ocultarTodo');
+		e.preventDefault();
+	});
+
+	$(document).on('click', '#btnMostrarTiempoAsignacion', function (e) {
+		var proyectado = $(this).data('proyectado'),
+			proy;
+		if(proyectado=='no'){
+			proy = 'si';
+			$(this).data('proyectado', 'si');
+		}else{
+			proy = 'no';
+			$(this).data('proyectado', 'no');
+		}
+		eventEmitter.emit('proyectar:tiempo', proy);
+
+	});
+
+	$(document).on('click', '#controlVentana', function (e) {
+		var accion = $(this).data('accion');
+		if(accion=='maximizar'){
+			ventana.maximizar();
+			$(this).data('accion', 'restaurar').text('Restaurar ventana');
+		
+		}else{
+			ventana.restaurar();
+			$(this).data('accion', 'maximizar').text('Maximizar ventana');
+		}
+		e.preventDefault();
+	});
+
+	function openWindow()
+{
+	var test = {
+		'demo':'si, es demo'
+	};
+
+	// Create a new window and get it
+	var ventana = nw.Window.open('./ventana.html', {
+		
+	}, function(new_win) {
+  		new_win.data = {somedata: 1};
+  		new_win.$ = $;
+  		new_win.eventEmitter = eventEmitter;
+
+  		new_win.onOk = function() { console.log("ok clicked") };
+  		new_win.onCancel = function() { console.log("cancel clicked") };
+	});
+
+
+}
+
+	
+	</script>
+  </body>
+</html>

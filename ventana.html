@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello World!</title>
+    <link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/main.css">
+    <style>
+    	body {
+    		/*4a6da7*/
+    		background:  #206fab;
+	    }
+	    body.crono-inverse{
+	    	background: #000;
+	    	color: #fff;
+	    }
+	    .logo {
+	    	margin-top: 15%;
+	    }
+	    .logo img {
+	    	position: relative;
+	    	vertical-align: middle;
+	    	display: block;
+	    	max-width: 40%;
+	    	margin-left: auto;
+	    	margin-right: auto;
+	    	left: auto;
+	    	right: auto; 
+	    	top:50%;
+	    	background: #fff;
+	    }
+	    canvas {
+			margin-top: 20%;
+	    }
+	    #crono h1{
+	    	color: #fff;
+	    	font-size: 200px;
+	    }
+    </style>
+
+</head>
+<body>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="container" id="bienvenida">
+				<div class="logo">
+					<img src="/assets/images/jworg.svg" class="img-responsive">
+				</div>
+			</div>
+			<div class="container text-center hide" id="bienvenida-timer">
+				<div id="bienvenida-timer-canvas"></div>
+			</div>
+			<div class="container text-center hide" id="crono">
+				<h1 id="crono-txt">00:00</h1>
+			</div>
+		</div>
+	</div>	
+	<script>
+  var win    = nw.Window.get();
+  var data   = win.data;
+  var evento = win.eventEmitter;
+  var $ = win.$;
+  
+  function checkTime(i) {
+  	return (i < 10) ? "0" + i : i;
+  }
+
+  function esconder() {
+  	$('.container').each(function(index, item){
+		$(item).addClass('hide');
+	});
+  }
+
+  evento.on('ocultarTodo', function () {
+  	esconder();
+  	$('#bienvenida').removeClass('hide');
+  });
+
+  evento.on('ventana', function(accion){  
+		if(accion=='maximizar'){
+			win.enterFullscreen();
+		}else{
+			win.leaveFullscreen();
+		}
+  });
+  evento.on('proyectar:tiempo', function(proyectar){
+  		esconder();
+  		
+  		if(proyectar=='si'){
+			$('#crono').removeClass('hide');
+  		}
+  });
+
+/*
+  document.getElementById("ok").onclick = function() {
+    win.onOk();
+  };
+  document.getElementById("cancel").onclick = function() {
+    win.onCancel();
+  };*/
+</script>
+</body>
+</html>
+
+

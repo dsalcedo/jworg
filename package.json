@@ -1,0 +1,19 @@
+{
+  "name": "helloworld",
+  "main": "index.html",
+  "window": {
+    "title": "node-webkit demo",
+    "icon": "link.png",
+    "toolbar": true,
+    "frame": true,
+    "width": 800,
+    "height": 500,
+    "position": "center",
+    "min_width": 400,
+    "min_height": 200
+  },
+  "webkit": {
+    "plugin": true
+  }/*,
+  "chromium-args" : " --is_official_build=true --ffmpeg_branding=\"Chrome\""*/
+}
